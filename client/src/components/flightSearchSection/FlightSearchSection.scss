@@ -1,0 +1,87 @@
+@import '../../scss/variables';
+
+.flight-search {
+  &-container {
+    background: url("../../assets/flight-search-section.jpeg") no-repeat center;
+    background-size: cover;
+    min-height: 500px;
+    padding: 15px;
+    @include flex(unset, unset, center);
+
+    h1 {
+      color: white;
+      font-weight: bold;
+    }
+  }
+
+  &-form {
+    width: 100%;
+    background-color: #02122c;
+    border-radius: 5px;
+    color: white;
+    @include flex(column, center, unset);
+    padding: 10px 20px;
+
+    .icons-size {
+      padding: 0 5px;
+
+      i {
+        font-size: 30px;
+      }
+    }
+  }
+}
+
+.passengers-no {
+  .passengers {
+    &-icon > i {
+      font-size: 25px;
+    }
+
+    &-label {
+      @include flex(column, center, unset);
+      margin-left: 10px;
+
+      p {
+        margin-bottom: 0 !important;
+        font-size: 17px;
+        font-weight: bold;
+      }
+
+      span {
+        color: #8f8f8f;
+        font-size: 12px;
+      }
+    }
+
+    &-btn {
+      border: 1px solid #b4b4b4;
+      border-radius: 4px;
+      padding: 0;
+      @include flex(row, center, center);
+
+      .item {
+        line-height: 35px;
+        flex: 1;
+        @include flex(row, center, center);
+        cursor: pointer;
+        font-size: 20px;
+
+        i {
+          line-height: 35px;
+        }
+
+        &:hover {
+          background-color: rgba(227, 227, 227, .4);
+        }
+      }
+
+      .show-number {
+        border-right: 1px solid #b4b4b4;
+        border-left: 1px solid #b4b4b4;
+        cursor: default;
+        pointer-events: none;
+      }
+    }
+  }
+}

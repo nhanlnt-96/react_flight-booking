@@ -1,0 +1,75 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap");
+* {
+  font-family: "Roboto", sans-serif;
+}
+
+.app {
+  min-height: 100vh;
+}
+.app-header {
+  height: 58px;
+}
+.app-body {
+  height: 94vh;
+}
+
+.auth-form {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.auth-form-item {
+  justify-content: center;
+  flex-direction: column;
+  flex: unset;
+  margin: 10px 0;
+}
+.auth-form-item label {
+  font-weight: 500;
+}
+.auth-form-item input {
+  padding: 5px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+}
+.auth-form-item input:focus {
+  border-color: #3498db;
+}
+.auth-form-item span {
+  color: red;
+  font-size: 12px;
+  font-weight: 400;
+  margin-bottom: 0;
+  position: absolute;
+  bottom: 0px;
+  transition: 0.1s ease-in;
+  z-index: -1;
+}
+.auth-form-item .p-active {
+  bottom: -20px;
+}
+.auth-form-item p {
+  text-align: right;
+  font-width: 500;
+}
+.auth-form-item button {
+  outline: none;
+  padding: 5px;
+  border: 1px solid #3498db;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #3498db;
+  font-weight: 500;
+}
+.auth-form-item button:hover {
+  background-color: #3498db;
+  color: white;
+}
+.auth-form-item:last-child {
+  margin-top: 0;
+}
+
+/*# sourceMappingURL=App.css.map */

@@ -1,0 +1,30 @@
+@mixin primary-input {
+  padding: 5px;
+  outline: none;
+  border: 1px solid black;
+  border-radius: 5px;
+  &:focus {
+    border-color: #3498db;
+  }
+}
+
+@mixin primary-btn {
+  outline: none;
+  padding: 5px;
+  border: 1px solid #3498db;
+  border-radius: 5px;
+  background-color: transparent;
+  color: #3498db;
+  font-weight: 500;
+  &:hover {
+    background-color: #3498db;
+    color: white;
+  }
+}
+
+@mixin flex($direction,$justify,$align) {
+  display: flex;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
