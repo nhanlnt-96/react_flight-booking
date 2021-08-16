@@ -11,16 +11,15 @@ const PORT = process.env.PORT || 3001;
 const headers = {
   'x-rapidapi-key': process.env.X_RAPID_API_KEY,
   'x-rapidapi-host': process.env.X_RAPID_API_HOST
-}
+};
 
 app.use(express.json());
 app.use(cors());
 
 //get list place
 app.get('/list-place', async (req: Request, res: Response) => {
-  const place = req.query.query;
   try {
-    const listPlaceData = await axios.get(`https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/VN/VND/en-EN/?query=${place}`, { headers });
+    const listPlaceData = await axios.get(`https://skyscanner-skyscanner-flight-search-v1.p.rapidapi.com/apiservices/autosuggest/v1.0/VN/VND/en-EN/?query=${req.query.place}`, { headers });
     res.json(listPlaceData.data);
   } catch (e) {
     console.log(e);
@@ -32,7 +31,7 @@ app.get('/browse-routes', async (req: Request, res: Response) => {
   const currency = 'USD';
   const originPlace = req.body.originPlace;
   const outboundPartialDate = req.body.outbound;
-  const country = req.body.country;
+  const country = 'VN';
   const destinationPlace = req.body.destinationPlace;
   const locale = 'en-US';
 
