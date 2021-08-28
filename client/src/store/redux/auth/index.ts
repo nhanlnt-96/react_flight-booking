@@ -4,11 +4,11 @@ import {
   SIGN_IN_ACCOUNT,
   SIGN_UP_ACCOUNT
 } from './actionTypes';
-import { UserAccount } from '../../../models';
+import { IUserAccount } from '../../../models';
 
 export interface AuthState {
-  allAccount: UserAccount[],
-  authAccount?: UserAccount,
+  allAccount: IUserAccount[],
+  authAccount?: IUserAccount,
   isLogged: boolean,
   authSuccess?: string | null,
   authError?: string | null

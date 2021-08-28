@@ -85,3 +85,16 @@
     }
   }
 }
+
+.dropdown-list {
+  height: 200px;
+  position: absolute;
+  z-index: 1;
+  width: calc(100% - 30px);
+  overflow: scroll;
+  border-radius: 5px;
+
+  div {
+    cursor: pointer;
+  }
+}

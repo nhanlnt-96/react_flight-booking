@@ -5,33 +5,116 @@ import {
   Container,
   Form,
   FormControl,
-  InputGroup,
+  InputGroup, ListGroup,
   Row
 } from 'react-bootstrap';
 import './FlightSearchSection.scss';
 import ModalPassenger from './ModalPassenger';
-import { ListPlaceData, SearchFlightData } from '../../models';
-import { getListPlace } from '../../network/services/listPlace';
+import { getListPlace } from '../../network/services';
+import { IListPlaceData } from '../../models';
+
+interface ISearchInput {
+  originPlace: string,
+  destinationPlace: string
+};
+
+interface IRequestResult {
+  resultOriginPlace: IListPlaceData[],
+  resultDestinationPlace: IListPlaceData[]
+};
+
+interface IShowListDetail {
+  originPlace: boolean,
+  destinationPlace: boolean
+}
 
 const FlightSearchSection: FC = () => {
   const [showModal, setShowModal] = useState<boolean>(false);
-  const [returnDate, setReturnData] = useState<boolean>(false);
-  const [place, setPlace] = useState<string>('');
-  const [data, setData] = useState<ListPlaceData[]>([]);
+  const [searchInput, setSearchInput] = useState<ISearchInput>({
+    originPlace: '',
+    destinationPlace: ''
+  });
+  const [data, setData] = useState<IRequestResult>({
+    resultDestinationPlace: [],
+    resultOriginPlace: []
+  });
+  const [showList, setShowList] = useState<IShowListDetail>({
+    originPlace: false,
+    destinationPlace: false
+  })
   const onShowModalInputClick = () => {
     setShowModal(true);
   };
-  const onReturnDateHandle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setReturnData(event.target.checked);
+  const onSelectOriginPlace = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput({
+      ...searchInput,
+      originPlace: event.target.value
+    });
+    if (event.target.value) {
+      await getListPlace(searchInput.originPlace).then((response) => {
+        setData({
+          resultOriginPlace: response.data.Places,
+          resultDestinationPlace: []
+        });
+        setShowList({
+          originPlace: true,
+          destinationPlace: false
+        });
+      });
+    } else {
+      setShowList({
+        originPlace: false,
+        destinationPlace: false
+      });
+    }
   };
-  const onHandleInput = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPlace(event.target.value);
-    const place = event.target.value;
-    await getListPlace(place).then((response) => setData(response.data.Places));
+  const onSelectDestinationPlace = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchInput({
+      ...searchInput,
+      destinationPlace: event.target.value
+    });
+    if (event.target.value) {
+      await getListPlace(searchInput.destinationPlace).then((response) => {
+        setData({
+          resultOriginPlace: [],
+          resultDestinationPlace: response.data.Places
+        });
+        setShowList({
+          originPlace: false,
+          destinationPlace: true
+        });
+      });
+    } else {
+      setShowList({
+        originPlace: false,
+        destinationPlace: false
+      });
+    }
   }
-  // const onSearchBtnClick = async () => {
-  //   await getListPlace(place).then((response) => setData(response.data.Places));
-  // }
+  const onSelectPlaceBtnClick = (type: string, place: string) => {
+    if (type === 'originPlace') {
+      setSearchInput({
+        ...searchInput,
+        originPlace: place
+      });
+      setShowList({
+        ...showList,
+        originPlace: false,
+      });
+    } else {
+      setSearchInput({
+        ...searchInput,
+        destinationPlace: place
+      });
+      setShowList({
+        ...showList,
+        destinationPlace: false
+      });
+    }
+  }
+  const onSearchBtnClick = async () => {
+    console.table(searchInput);
+  }
   return (
     <Container fluid className="flight-search-container">
       <Container>
@@ -46,23 +129,56 @@ const FlightSearchSection: FC = () => {
                 <InputGroup.Text className="icons-size">
                   <i className='bx bxs-plane-take-off'></i>
                 </InputGroup.Text>
-                <FormControl id="inlineFormInputGroup"
+                <FormControl autoComplete="off" id="inlineFormInputGroup"
                              placeholder="Ex: Ho Chi Minh City (SGN)"
-                             value={place} onChange={onHandleInput} />
+                             name="originPlace"
+                             value={searchInput.originPlace}
+                             onChange={onSelectOriginPlace} />
               </InputGroup>
+              <ListGroup className="dropdown-list">
+                {
+                  showList.originPlace && data.resultOriginPlace.map((val, index) => {
+                    return (
+                      <ListGroup.Item key={index}
+                                      style={{ color: "black" }}
+                                      onClick={() => onSelectPlaceBtnClick('originPlace', val.PlaceName)}
+                      >
+                        {val.PlaceName}
+                      </ListGroup.Item>
+                    )
+                  })
+                }
+              </ListGroup>
             </Col>
-            {/*  <Col className="col-12 col-lg-4 align-items-center">*/}
-            {/*    <Form.Label htmlFor="inlineFormInputGroup">*/}
-            {/*      To*/}
-            {/*    </Form.Label>*/}
-            {/*    <InputGroup className="mb-2">*/}
-            {/*      <InputGroup.Text className="icons-size">*/}
-            {/*        <i className='bx bxs-plane-land'></i>*/}
-            {/*      </InputGroup.Text>*/}
-            {/*      <FormControl id="inlineFormInputGroup"*/}
-            {/*                   placeholder="Ex: Dalat (DLI)" />*/}
-            {/*    </InputGroup>*/}
-            {/*  </Col>*/}
+            <Col className="col-12 col-lg-4 align-items-center">
+              <Form.Label htmlFor="inlineFormInputGroup">
+                To
+              </Form.Label>
+              <InputGroup className="mb-2">
+                <InputGroup.Text className="icons-size">
+                  <i className='bx bxs-plane-land'></i>
+                </InputGroup.Text>
+                <FormControl autoComplete="off" id="inlineFormInputGroup"
+                             placeholder="Ex: Dalat (DLI)"
+                             name="destinationPlace"
+                             value={searchInput.destinationPlace}
+                             onChange={onSelectDestinationPlace} />
+              </InputGroup>
+              <ListGroup className="dropdown-list">
+                {
+                  showList.destinationPlace && data.resultDestinationPlace.map((val, index) => {
+                    return (
+                      <ListGroup.Item key={index}
+                                      style={{ color: "black" }}
+                                      onClick={() => onSelectPlaceBtnClick('destinationPlace', val.PlaceName)}
+                      >
+                        {val.PlaceName}
+                      </ListGroup.Item>
+                    )
+                  })
+                }
+              </ListGroup>
+            </Col>
             {/*  <Col className="col-12 col-lg-4 align-items-center">*/}
             {/*    <Form.Label htmlFor="inlineFormInputGroup">*/}
             {/*      No. of Passengers*/}
@@ -111,19 +227,10 @@ const FlightSearchSection: FC = () => {
             {/*  </Col>*/}
             <Col
               className="col-12 col-lg-4 align-items-center d-flex justify-content-center">
-              <Button>Search Flights</Button>
+              <Button onClick={onSearchBtnClick}>Search Flights</Button>
             </Col>
           </Row>
         </Form>
-        {
-          data.map((val, index) => {
-            return (
-              <ul key={index} style={{ backgroundColor: "white" }}>
-                <li>{val.PlaceName}</li>
-              </ul>
-            )
-          })
-        }
       </Container>
     </Container>
   );
